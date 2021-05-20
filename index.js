@@ -2,7 +2,6 @@ const express = require('express')
 const Razorpay = require('razorpay')
 const bodyParser = require('body-parser')
 const crypto = require('crypto')
-const fast2sms = require('fast-two-sms')
 require('dotenv').config()
 
 const port = process.env.PORT || 5000
@@ -19,8 +18,6 @@ app.get('/', (req, res) => {
 app.post('/verification', (req, res) =>{
     const secret = '123456'
     
-	send()
-
 	const shasum = crypto.createHmac('sha256', secret)
 	shasum.update(JSON.stringify(req.body))
 	const digest = shasum.digest('hex')
@@ -44,10 +41,3 @@ app.post('/verification', (req, res) =>{
 console.log("Port start lisining at 5000")
 
 app.listen(port)
-
-
-function send(){
-	console.log('message is sending')
-	var options = {authorization : process.env.API , message : 'Payment completed',  numbers : ['7860290907']} 
-	const response = fast2sms.sendMessage(options).then(response=>{console.log(response)})
-}

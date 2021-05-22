@@ -3,7 +3,7 @@ const Razorpay = require('razorpay')
 const bodyParser = require('body-parser')
 const crypto = require('crypto')
 const mongoose = require('mongoose')
-mongoose.connect("mongodb://localhost:27017/data", { useNewUrlParser: true, useUnifiedTopology: true})
+mongoose.connect("mongodb+srv://bakwas:bakwas@cluster0.uvmz9.mongodb.net/college?retryWrites=true&w=majority", { useNewUrlParser: true, useUnifiedTopology: true})
 .then(()=> console.log("Connection successfull..."))
 .catch((err)=> console.log(err))
 require('dotenv').config()
@@ -29,9 +29,9 @@ const Playlist = new mongoose.model("account", playList)
 
 // =========================================================================
 
-// app.get('/', (req, res) => {
-//     res.send("Hello this is me") 
-// });
+app.get('/', (req, res) => {
+    res.send("Hello this is me") 
+});
 
 app.post('/verification', (req, res) =>{
     const secret = '123456'

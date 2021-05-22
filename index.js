@@ -28,7 +28,7 @@ app.post('/verification', (req, res) =>{
 		console.log('request is legit')
 
 		require('fs').writeFileSync('payment1.json', JSON.stringify(req.body, null, 4))
-		const detail = require('./payment1.json')
+		
 		
         console.log(detail.payload.payment.entity.amount)
 
@@ -37,6 +37,11 @@ app.post('/verification', (req, res) =>{
 	}
     res.json({status : 'OK'})
 })
+
+app.get('/', (req, res) => {
+	const detail = require('./payment1.json')
+    res.send(detail) 
+});
 
 console.log("Port start lisining at 5000")
 

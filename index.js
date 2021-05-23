@@ -29,8 +29,6 @@ app.post('/verification', async(req, res) =>{
 			const user = new Data({
 				account_id:JSON.stringify(req.body.payload.payment.entity.id, null, 4),
 				amount:JSON.stringify(req.body.payload.payment.entity.amount/100, null, 4),
-				order_id:JSON.stringify(req.body.payload.payment.entity.order_id, null, 4),
-				created_at: JSON.stringify(req.body.payload.payment.entity.created_at, null, 4)
 			})
 
 			const createuser = await user.save()

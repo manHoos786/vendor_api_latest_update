@@ -18,8 +18,8 @@ const { create } = require('xmlbuilder')
 
 app.post('/verification', async(req, res) =>{
 	try{
-		const secret = '123456'  
-		const shasum = crypto.createHmac('sha256', secret)
+		const SECRET = 'a65e6cbffa15cd44f2a33fe2f6424929a448320b'  
+		const shasum = crypto.createHmac('sha256', SECRET)
 		shasum.update(JSON.stringify(req.body))
 		const digest = shasum.digest('hex')
 
@@ -31,8 +31,6 @@ app.post('/verification', async(req, res) =>{
 				amount:JSON.stringify(req.body.payload.payment.entity.amount/100, null, 4),
 				t_id:JSON.stringify(req.body.payload.payment.entity.id, null, 4)
 			})
-			console.log(JSON.stringify(req.body.account_id, null, 4 ))
-
 			const createuser = await user.save()
 			res.status(201).send(createuser)
 		}
@@ -43,7 +41,7 @@ app.post('/verification', async(req, res) =>{
 app.get('/verify', async(req, res)=>{
 	try{
 		const currentData = await Data.find();
-		res.send((currentData))
+		res.send(currentData)
 
 	}catch(e){res.status(400).send(e)}
 })

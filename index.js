@@ -27,8 +27,9 @@ app.post('/verification', async(req, res) =>{
 			console.log('request is legit')
 
 			const user = new Data({
-				account_id:JSON.stringify(req.body.payload.payment.entity.id, null, 4),
+				account_id:JSON.stringify(req.body.account_id, null, 4),
 				amount:JSON.stringify(req.body.payload.payment.entity.amount/100, null, 4),
+				t_id:JSON.stringify(req.body.payload.payment.entity.id, null, 4)
 			})
 
 			const createuser = await user.save()
@@ -41,7 +42,7 @@ app.post('/verification', async(req, res) =>{
 app.get('/verify', async(req, res)=>{
 	try{
 		const currentData = await Data.find();
-		res.send(currentData)
+		res.send(typeof(currentData))
 
 	}catch(e){res.status(400).send(e)}
 })

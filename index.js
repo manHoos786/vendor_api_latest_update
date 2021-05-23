@@ -2,76 +2,50 @@ const express = require('express')
 const Razorpay = require('razorpay')
 const bodyParser = require('body-parser')
 const crypto = require('crypto')
-const mongoose = require('mongoose')
-mongoose.connect("mongodb+srv://bakwas:bakwas@cluster0.uvmz9.mongodb.net/college?retryWrites=true&w=majority", { useNewUrlParser: true, useUnifiedTopology: true})
-.then(()=> console.log("Connection successfull..."))
-.catch((err)=> console.log(err))
-require('dotenv').config()
-
 const port = process.env.PORT || 5000
+require('dotenv').config()
+require('./DB/connection')
+
 let app = express()
-app.use(bodyParser.json())
-app.set('views', 'views')
-app.set('view engine', 'ejs')
-app.use(express.urlencoded({ extended: false }))
+app.use(express.json())
+
+const Data = require('./DB/schema')
+const { create } = require('xmlbuilder')
 
 
-// Mongooose-----================================================================
-
-const playList = new mongoose.Schema({
-	acid:String,
-	amount:Number,
-	currency:String
-});
-
-const Playlist = new mongoose.model("account", playList)
+// Mongooose-----===========================================================
 
 
-// =========================================================================
+app.post('/verification', async(req, res) =>{
+	try{
+		const secret = '123456'  
+		const shasum = crypto.createHmac('sha256', secret)
+		shasum.update(JSON.stringify(req.body))
+		const digest = shasum.digest('hex')
 
-app.get('/', (req, res) => {
-    res.send("Hello this is me") 
-});
+		if (digest === req.headers['x-razorpay-signature']) {
+			console.log('request is legit')
 
-app.post('/verification', (req, res) =>{
-    const secret = '123456'
-    
-	const shasum = crypto.createHmac('sha256', secret)
-	shasum.update(JSON.stringify(req.body))
-	const digest = shasum.digest('hex')
+			const user = new Data({
+				account_id:JSON.stringify(req.body.payload.payment.entity.id, null, 4),
+				amount:JSON.stringify(req.body.payload.payment.entity.amount/100, null, 4),
+				order_id:JSON.stringify(req.body.payload.payment.entity.order_id, null, 4),
+				created_at: JSON.stringify(req.body.payload.payment.entity.created_at, null, 4)
+			})
 
-	// console.log(digest, req.headers['x-razorpay-signature'])
-
-	if (digest === req.headers['x-razorpay-signature']) {
-		console.log('request is legit')
-
-		require('fs').writeFileSync('payment1.json', JSON.stringify(req.body, null, 4))
-		console.log(JSON.stringify(req.body.payload.payment.entity.id, null, 4))
-		
-        const createDoc = async ()=>{
-			try{
-				const userData = new Playlist({
-					acid:JSON.stringify(req.body.payload.payment.entity.id, null, 4),
-					amount:JSON.stringify(req.body.payload.payment.entity.amount, null, 4),
-					currency:JSON.stringify(req.body.payload.payment.entity.currency, null, 4)
-				})
-				const result = await userData.save()
-				console.log(result)
-				
-			}
-			catch(err){
-				console.log(err)
-			}
+			const createuser = await user.save()
+			res.status(201).send(createuser)
 		}
-		createDoc();
-
-
-	} else {
-		// pass i\
-	}
-    res.json({status : 'OK'})
+		console.log(req.body)
+	}catch(e){res.status(400).send(e)}
 })
 
-console.log("Port start lisining at 5000")
+app.get('/verify', async(req, res)=>{
+	try{
+		const currentData = await Data.find();
+		res.send(currentData)
 
-app.listen(port)
+	}catch(e){res.status(400).send(e)}
+})
+
+app.listen(port, console.log(`Port start lisining at ${port}`))

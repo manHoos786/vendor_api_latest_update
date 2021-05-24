@@ -44,7 +44,7 @@ app.post('/verification', async(req, res) =>{
 
 app.get('/verify/:id', async(req, res)=>{
 	try{
-		
+
 		const _id = (req.params.id)
 		const accountData = await findData(_id).find().where('status').equals(false);
 		const isEmpty = Object.keys(accountData).length === 0 
@@ -60,9 +60,23 @@ app.get('/verify/:id', async(req, res)=>{
 	}
 })
 
+app.patch('/patch/:id', function (req, res) {
+    const uniqueId = req.body._id 
+    const bankId = req.params.id
+    console.log(uniqueId)
+    sendId(bankId).findByIdAndUpdate(uniqueId, {$set:{status:true}} ,(err, docs)=>{
+        if(err){
+            res.status(404).send("Something went wrong")
+        }
+        res.send(docs)
+    })
+});
+
 function findData(id){
 	const model = new mongoose.model(`${id}`, schema)
 	return model
 }
+
+
 
 app.listen(port, console.log(`Port start lisining at ${port}`))

@@ -15,6 +15,7 @@ const { create } = require('xmlbuilder')
 const schema = new mongoose.Schema({
     amount: Number,
     t_id:String,
+	account_id:String,
 	status:Boolean
 });
 
@@ -33,6 +34,7 @@ app.post('/verification', async(req, res) =>{
 			const user = new findData(accountNumber)({
 				amount:JSON.stringify(req.body.payload.payment.entity.amount/100, null, 4),
 				t_id:JSON.stringify(req.body.payload.payment.entity.id, null, 4),
+				account_id:JSON.stringify(req.body.account_id, null, 4),
 				status:false
 			})
 			const createuser = await user.save()
@@ -76,7 +78,5 @@ function findData(id){
 	const model = new mongoose.model(`${id}`, schema)
 	return model
 }
-
-
 
 app.listen(port, console.log(`Port start lisining at ${port}`))

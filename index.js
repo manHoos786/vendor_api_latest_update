@@ -15,7 +15,7 @@ const { create } = require('xmlbuilder')
 const schema = new mongoose.Schema({
     amount: Number,
     t_id:String,
-	status:String
+	status:Boolean
 });
 
 // Mongooose-----===========================================================
@@ -33,7 +33,7 @@ app.post('/verification', async(req, res) =>{
 			const user = new findData(accountNumber)({
 				amount:JSON.stringify(req.body.payload.payment.entity.amount/100, null, 4),
 				t_id:JSON.stringify(req.body.payload.payment.entity.id, null, 4),
-				status:"false"
+				status:false
 			})
 			const createuser = await user.save()
 			res.status(201).send(createuser)
@@ -44,10 +44,9 @@ app.post('/verification', async(req, res) =>{
 
 app.get('/verify/:id', async(req, res)=>{
 	try{
+		
 		const _id = (req.params.id)
-		const accountData = await findData(_id).find();
-		console.log(accountData)
-		console.log(typeof(accountData))
+		const accountData = await findData(_id).find().where('status').equals(false);
 		const isEmpty = Object.keys(accountData).length === 0 
 		if(isEmpty){
 			return res.status(404).send("Invalid id...")

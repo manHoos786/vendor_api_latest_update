@@ -1,6 +1,5 @@
 const express = require('express')
-const Razorpay = require('razorpay')
-const bodyParser = require('body-parser')
+const mongoose = require('mongoose')
 const crypto = require('crypto')
 const port = process.env.PORT || 5000
 require('dotenv').config()
@@ -9,9 +8,14 @@ require('./DB/connection')
 let app = express()
 app.use(express.json())
 
-const Data = require('./DB/schema')
 const { create } = require('xmlbuilder')
 
+//Mongoose schema .............==================================
+
+const schema = new mongoose.Schema({
+    amount: Number,
+    t_id:String
+});
 
 // Mongooose-----===========================================================
 
@@ -24,10 +28,8 @@ app.post('/verification', async(req, res) =>{
 		const digest = shasum.digest('hex')
 
 		if (digest === req.headers['x-razorpay-signature']) {
-			console.log('request is legit')
-
-			const user = new Data({
-				account_id:JSON.stringify(req.body.account_id, null, 4),
+			const accountNumber = req.body.account_id
+			const user = new findData(accountNumber)({
 				amount:JSON.stringify(req.body.payload.payment.entity.amount/100, null, 4),
 				t_id:JSON.stringify(req.body.payload.payment.entity.id, null, 4)
 			})
@@ -38,12 +40,25 @@ app.post('/verification', async(req, res) =>{
 	}catch(e){res.status(400).send(e)}
 })
 
-app.get('/verify', async(req, res)=>{
+app.get('/verify/:id', async(req, res)=>{
 	try{
-		const currentData = await Data.find();
-		res.send(currentData)
-
-	}catch(e){res.status(400).send(e)}
+		const _id = (req.params.id)
+		const accountData = await findData(_id).find();
+		if(!accountData){
+			return res.status(404).send("Invalid id...")
+		}
+		else{
+			res.send(accountData)
+		}
+	}catch(e){
+		console.log("error is here")
+		res.status(400).send(e)
+	}
 })
+
+function findData(id){
+	const model = new mongoose.model(`${id}`, schema)
+	return model
+}
 
 app.listen(port, console.log(`Port start lisining at ${port}`))

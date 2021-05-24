@@ -46,6 +46,8 @@ app.get('/verify/:id', async(req, res)=>{
 	try{
 		const _id = (req.params.id)
 		const accountData = await findData(_id).find();
+		console.log(accountData)
+		console.log(typeof(accountData))
 		const isEmpty = Object.keys(accountData).length === 0 
 		if(isEmpty){
 			return res.status(404).send("Invalid id...")

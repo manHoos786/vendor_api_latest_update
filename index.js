@@ -14,7 +14,8 @@ const { create } = require('xmlbuilder')
 
 const schema = new mongoose.Schema({
     amount: Number,
-    t_id:String
+    t_id:String,
+	status:String
 });
 
 // Mongooose-----===========================================================
@@ -31,7 +32,8 @@ app.post('/verification', async(req, res) =>{
 			const accountNumber = req.body.account_id
 			const user = new findData(accountNumber)({
 				amount:JSON.stringify(req.body.payload.payment.entity.amount/100, null, 4),
-				t_id:JSON.stringify(req.body.payload.payment.entity.id, null, 4)
+				t_id:JSON.stringify(req.body.payload.payment.entity.id, null, 4),
+				status:"false"
 			})
 			const createuser = await user.save()
 			res.status(201).send(createuser)

@@ -32,16 +32,18 @@ app.post('/final_recipt', async(req, res) =>{
 	}
 })
 
-app.post('/delete_order/:id', async(req, res) =>{
+app.delete('/delete_order/:id', async(req, res) =>{
 	try{
 		const _id = (req.params.id)
 		const deleteData = await findData(_id).findOneAndDelete({_id: req.body._id}, (err)=>{
 			if(err){
 				res.status(400).send("Something went wrong.")
 			}
+			
 			res.send("Deleted Successfully")
 		})
 	}catch(e){
+		console.log(e)
 		res.status(400).send(e)
 	}
 })

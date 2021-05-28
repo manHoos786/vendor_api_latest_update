@@ -70,12 +70,11 @@ app.post('/verification', async(req, res) =>{
 
 app.get('/verify/:id', async(req, res)=>{
 	try{
-
 		const _id = (req.params.id)
 		const accountData = await findData(_id).find().where('status').equals(false);
 		const isEmpty = Object.keys(accountData).length === 0 
 		if(isEmpty){
-			return res.status(404).send("Invalid id...")
+			return res.status(404).send("No data avilable.")
 		}
 		else{
 			res.send(accountData)

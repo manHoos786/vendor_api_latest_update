@@ -4,13 +4,9 @@ const crypto = require('crypto')
 const port = process.env.PORT || 5000
 require('dotenv').config()
 require('./DB/connection')
-
 let app = express()
 app.use(express.json())
-
 const { create } = require('xmlbuilder')
-
-//Mongoose schema .............==================================
 
 const schema = new mongoose.Schema({
     amount: Number,
@@ -18,8 +14,6 @@ const schema = new mongoose.Schema({
 	account_id:String,
 	status:Boolean
 });
-
-// Mongooose-----===========================================================
 
 app.post('/final_recipt', async(req, res) =>{
 	try{
@@ -51,7 +45,6 @@ app.post('/delete_order/:id', async(req, res) =>{
 		res.status(400).send(e)
 	}
 })
-
 
 app.post('/verification', async(req, res) =>{
 	try{
@@ -92,7 +85,6 @@ app.get('/verify/:id', async(req, res)=>{
 		res.status(400).send(e)
 	}
 })
-
 
 function findData(id){
 	const model = new mongoose.model(`${id}`, schema)

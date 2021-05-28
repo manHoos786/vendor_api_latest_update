@@ -18,8 +18,7 @@ const schema = new mongoose.Schema({
 app.post('/final_recipt', async(req, res) =>{
 	try{
 
-		const model = new mongoose.model("final_recipt", schema)
-		const recipt = new model({
+		const recipt = new findData("final_recipt")({
 			amount : req.body.amount,
 			t_id:req.body.t_id,
 			account_id:req.body.account_id,
@@ -39,7 +38,6 @@ app.delete('/delete_order/:id', async(req, res) =>{
 			if(err){
 				res.status(400).send("Something went wrong.")
 			}
-			
 			res.send("Deleted Successfully")
 		})
 	}catch(e){

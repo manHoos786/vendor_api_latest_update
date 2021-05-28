@@ -21,6 +21,37 @@ const schema = new mongoose.Schema({
 
 // Mongooose-----===========================================================
 
+app.post('/final_recipt', async(req, res) =>{
+	try{
+
+		const model = new mongoose.model("final_recipt", schema)
+		const recipt = new model({
+			amount : req.body.amount,
+			t_id:req.body.t_id,
+			account_id:req.body.account_id,
+		})
+		const createRecipt = await recipt.save()
+		res.status(201).send(createRecipt)
+
+	}catch(e){
+		res.status(400).send("Something went wrong")
+	}
+})
+
+app.post('/delete_order/:id', async(req, res) =>{
+	try{
+		const _id = (req.params.id)
+		const deleteData = await findData(_id).findOneAndDelete({_id: req.body._id}, (err)=>{
+			if(err){
+				res.status(400).send("Something went wrong.")
+			}
+			res.send("Deleted Successfully")
+		})
+	}catch(e){
+		res.status(400).send(e)
+	}
+})
+
 
 app.post('/verification', async(req, res) =>{
 	try{
@@ -62,21 +93,12 @@ app.get('/verify/:id', async(req, res)=>{
 	}
 })
 
-app.patch('/patch/:id', function (req, res) {
-    const uniqueId = req.body._id 
-    const bankId = req.params.id
-    console.log(uniqueId)
-    sendId(bankId).findByIdAndUpdate(uniqueId, {$set:{status:true}} ,(err, docs)=>{
-        if(err){
-            res.status(404).send("Something went wrong")
-        }
-        res.send(docs)
-    })
-});
 
 function findData(id){
 	const model = new mongoose.model(`${id}`, schema)
 	return model
 }
 
-app.listen(port, console.log(`Port start lisining at ${port}`))
+app.listen(5000,  ()=>{
+	console.log(`Connection is stablished at port ${port}`)
+})

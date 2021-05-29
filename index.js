@@ -1,6 +1,8 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const crypto = require('crypto')
+const bodyParser = require('body-parser')
+const Razorpay = require('razorpay')
 const port = process.env.PORT || 5000
 require('dotenv').config()
 require('./DB/connection')
@@ -8,12 +10,31 @@ let app = express()
 app.use(express.json())
 const { create } = require('xmlbuilder')
 
+const instance = new Razorpay({
+	key_id : process.env.KEY_ID,
+	key_secret : process.env.KEY_SECRET
+})
+
+
 const schema = new mongoose.Schema({
     amount: Number,
     t_id:String,
 	account_id:String,
 	status:Boolean
 });
+
+
+app.post("/api/payment/order", (req, res) =>{
+	params = req.body;
+	instance.orders
+		.create(params)
+		.then((data) =>{
+			res.send({sub:data, status:"success"})
+		})
+		.catch((error)=>{
+			res.status(400).send({sub:error, status:"failed"})
+		})
+})
 
 app.post('/final_recipt', async(req, res) =>{
 	try{
@@ -92,4 +113,5 @@ function findData(id){
 
 app.listen(port,  ()=>{
 	console.log(`Connection is stablished at port ${port}`)
+	// console.log(process.env.KEY_ID)
 })

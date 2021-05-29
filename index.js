@@ -69,7 +69,7 @@ app.delete('/delete_order/:id', async(req, res) =>{
 
 app.post('/verification', async(req, res) =>{
 	try{
-		const SECRET =	process.env.SECRET  
+		const SECRET ='a65e6cbffa15cd44f2a33fe2f6424929a448320b'
 		const shasum = crypto.createHmac('sha256', SECRET)
 		shasum.update(JSON.stringify(req.body))
 		const digest = shasum.digest('hex')
@@ -113,5 +113,4 @@ function findData(id){
 
 app.listen(port,  ()=>{
 	console.log(`Connection is stablished at port ${port}`)
-	// console.log(process.env.KEY_ID)
 })

@@ -69,7 +69,7 @@ app.delete('/delete_order/:id', async(req, res) =>{
 
 app.post('/verification', async(req, res) =>{
 	try{
-		const SECRET = 'a65e6cbffa15cd44f2a33fe2f6424929a448320b'  
+		const SECRET =	process.env.SECRET  
 		const shasum = crypto.createHmac('sha256', SECRET)
 		shasum.update(JSON.stringify(req.body))
 		const digest = shasum.digest('hex')

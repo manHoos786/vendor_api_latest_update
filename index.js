@@ -27,10 +27,10 @@ app.post("/api/payment/order", (req, res) =>{
 	instance.orders
 		.create(params)
 		.then((data) =>{
-			res.send({sub:data, status:"success"})
+			return res.send({sub:data, status:"success"})
 		})
 		.catch((error)=>{
-			res.status(400).send({sub:error, status:"failed"})
+			return res.status(400).send({sub:error, status:"failed"})
 		})
 })
 
@@ -43,10 +43,10 @@ app.post('/final_recipt', async(req, res) =>{
 			account_id:req.body.account_id,
 		})
 		const createRecipt = await recipt.save()
-		res.status(201).send(createRecipt)
+		return res.status(201).send(createRecipt)
 
 	}catch(e){
-		res.status(400).send("Something went wrong")
+		return res.status(400).send("Something went wrong")
 	}
 })
 
@@ -55,13 +55,13 @@ app.delete('/delete_order/:id', async(req, res) =>{
 		const _id = (req.params.id)
 		const deleteData = await findData(_id).findOneAndDelete({_id: req.body._id}, (err)=>{
 			if(err){
-				res.status(400).send("Something went wrong.")
+				return res.status(400).send("Something went wrong.")
 			}
-			res.send("Deleted Successfully")
+			return res.send("Deleted Successfully")
 		})
 	}catch(e){
 		console.log(e)
-		res.status(400).send(e)
+		return res.status(400).send(e)
 	}
 })
 
@@ -87,8 +87,8 @@ app.post('/verification', async(req, res) =>{
 		}
 		
 		console.log(req.body)
-		res.send("something went wrong")
-	}catch(e){res.status(400).send(e)}
+		return res.send("something went wrong")
+	}catch(e){return res.status(400).send(e)}
 })
 
 app.get('/verify/:id', async(req, res)=>{
@@ -100,11 +100,11 @@ app.get('/verify/:id', async(req, res)=>{
 			return res.status(404).send("No data avilable.")
 		}
 		else{
-			res.send(accountData)
+			return res.send(accountData)
 		}
 	}catch(e){
 		console.log("error is here")
-		res.status(400).send(e)
+		return res.status(400).send(e)
 	}
 })
 

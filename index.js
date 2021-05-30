@@ -10,12 +10,29 @@ let app = express()
 app.use(express.json())
 const { create } = require('xmlbuilder')
 
+const instance = new Razorpay({
+	key_id : process.env.KEY_ID,
+	key_secret : process.env.KEY_SECRET
+})
+
 const schema = new mongoose.Schema({
     amount: Number,
     t_id:String,
 	account_id:String,
 	status:Boolean
 });
+
+app.post("/api/payment/order", (req, res) =>{
+	params = req.body;
+	instance.orders
+		.create(params)
+		.then((data) =>{
+			res.send({sub:data, status:"success"})
+		})
+		.catch((error)=>{
+			res.status(400).send({sub:error, status:"failed"})
+		})
+})
 
 app.post('/final_recipt', async(req, res) =>{
 	try{

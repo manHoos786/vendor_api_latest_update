@@ -55,6 +55,8 @@ app.post('/verification', async(req, res) =>{
 		shasum.update(JSON.stringify(req.body))
 		const digest = shasum.digest('hex')
 
+		console.log(req.headers)
+
 		if (digest === req.headers['x-razorpay-signature']) {
 			const accountNumber = req.body.account_id
 			const user = new findData(accountNumber)({

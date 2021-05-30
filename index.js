@@ -27,7 +27,7 @@ app.post("/api/payment/order", (req, res) =>{
 	instance.orders
 		.create(params)
 		.then((data) =>{
-			return res.send({sub:data, status:"success"})
+			return res.status(200).send({sub:data, status:"success"})
 		})
 		.catch((error)=>{
 			return res.status(400).send({sub:error, status:"failed"})
@@ -57,10 +57,9 @@ app.delete('/delete_order/:id', async(req, res) =>{
 			if(err){
 				return res.status(400).send("Something went wrong.");
 			}
-			return res.send("Deleted Successfully");
+			return res.status(200).send("Deleted Successfully");
 		})
 	}catch(e){
-		console.log(e);
 		return res.status(400).send(e);
 	};
 });
@@ -81,10 +80,10 @@ app.post('/verification', async(req, res) =>{
 				status:false
 			})
 			const createuser = await user.save();
-			res.status(201).send(createuser);
+			return res.status(201).send(createuser);
 		}
 		
-		return res.send("something went wrong");
+		return res.status(400).send("something went wrong");
 	}catch(e){return res.status(400).send(e)};
 });
 
@@ -97,10 +96,9 @@ app.get('/verify/:id', async(req, res)=>{
 			return res.status(404).send("No data avilable.");
 		}
 		else{
-			return res.send(accountData);
+			return res.status(200).send(accountData);
 		}
 	}catch(e){
-		console.log("error is here");
 		return res.status(400).send(e);
 	};
 });

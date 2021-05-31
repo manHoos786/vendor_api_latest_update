@@ -8,6 +8,7 @@ require('dotenv').config();
 require('./DB/connection');
 let app = express();
 app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: false }))
 const { create } = require('xmlbuilder');
 
 const schema = new mongoose.Schema({
@@ -15,33 +16,30 @@ const schema = new mongoose.Schema({
     t_id:String,
 	account_id:String,
 	status:Boolean,
-	API_KEY:String,
-	API_VALUE:String
+	api_key:String,
+	api_value:String,
 });
 
 app.post("/api/payment/order/:id", async(req, res) =>{
 	const razorpay_key = req.params.id;
-	const accountData = await findData('key_values').find().where('API_KEY').equals(razorpay_key);
-    const data = accountData[0]
-    const jsonObject = JSON.stringify(data)
-    const objectValue = JSON.parse(jsonObject);
+	const accountData = await findData('key_values').find().where('api_key').equals(razorpay_key);
+    const data = JSON.stringify(accountData[0])
+    const d = JSON.parse(data)
 	const instance = new Razorpay({
 		key_id : razorpay_key,
-		key_secret : objectValue['API_VALUE']
+		key_secret : d.api_value
 	});
 	parameter = req.body;
 
 	console.log(razorpay_key)
-	console.log(objectValue['API_VALUE'])
+	console.log(d.api_value)
 	console.log(parameter)
 
-	instance.orders
-		.create(parameter)
-		.then((data) =>{
+	instance.orders.create(parameter).then((data) =>{
 			return res.status(200).send({sub:data, status:"success"});
 		})
 		.catch((error)=>{
-			return res.status(400).send({sub:error, status:"failed"})
+			return res.status(400).send({sub:error, status:"failed"});
 		});
 });
 

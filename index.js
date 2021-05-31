@@ -10,22 +10,35 @@ let app = express();
 app.use(express.json());
 const { create } = require('xmlbuilder');
 
-const instance = new Razorpay({
-	key_id : process.env.KEY_ID,
-	key_secret : process.env.KEY_SECRET
-});
-
 const schema = new mongoose.Schema({
     amount: Number,
     t_id:String,
 	account_id:String,
-	status:Boolean
+	status:Boolean,
+	API_KEY:String
 });
 
-app.post("/api/payment/order", (req, res) =>{
-	params = req.body;
+app.post("/api/payment/order/:id", async(req, res) =>{
+	const razorpay_key = req.params.id
+	const _id = req.params.id
+	const accountData = await findData('key_values').find().where('API_KEY').equals(razorpay_key)
+    const data = accountData[0]
+    const jsonObject = JSON.stringify(data)
+    var objectValue = JSON.parse(jsonObject);
+	const instance = new Razorpay({
+		key_id : razorpay_key,
+		key_secret : objectValue['API_VALUE']
+	});
+
+
+	console.log(razorpay_key)
+	console.log(objectValue['API_VALUE'])
+	
+	
+	parameter = req.body;
+
 	instance.orders
-		.create(params)
+		.create(parameter)
 		.then((data) =>{
 			return res.status(200).send({sub:data, status:"success"})
 		})
@@ -72,6 +85,8 @@ app.post('/verification', async(req, res) =>{
 		const digest = shasum.digest('hex');
 
 		if (digest === req.headers['x-razorpay-signature']) {
+			console.log(req.body);
+			require('fs').writeFileSync('payment1.json', JSON.stringify(req.body, null, 4))
 			const accountNumber = req.body.account_id;
 			const user = new findData(accountNumber)({
 				amount:JSON.stringify(req.body.payload.payment.entity.amount/100, null, 4),

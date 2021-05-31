@@ -19,28 +19,22 @@ const schema = new mongoose.Schema({
 });
 
 app.post("/api/payment/order/:id", async(req, res) =>{
-	const razorpay_key = req.params.id
-	const _id = req.params.id
-	const accountData = await findData('key_values').find().where('API_KEY').equals(razorpay_key)
-    const data = accountData[0]
-    const jsonObject = JSON.stringify(data)
+	const razorpay_key = req.params.id;
+	const _id = req.params.id;
+	const accountData = await findData('key_values').find().where('API_KEY').equals(razorpay_key);
+    const data = accountData[0];
+    const jsonObject = JSON.stringify(data);
     var objectValue = JSON.parse(jsonObject);
 	const instance = new Razorpay({
 		key_id : razorpay_key,
 		key_secret : objectValue['API_VALUE']
 	});
-
-
-	console.log(razorpay_key)
-	console.log(objectValue['API_VALUE'])
-	
-	
 	parameter = req.body;
 
 	instance.orders
 		.create(parameter)
 		.then((data) =>{
-			return res.status(200).send({sub:data, status:"success"})
+			return res.status(200).send({sub:data, status:"success"});
 		})
 		.catch((error)=>{
 			return res.status(400).send({sub:error, status:"failed"})

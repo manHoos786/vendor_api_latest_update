@@ -20,7 +20,6 @@ const schema = new mongoose.Schema({
 
 app.post("/api/payment/order/:id", async(req, res) =>{
 	const razorpay_key = req.params.id;
-	const _id = req.params.id;
 	const accountData = await findData('key_values').find().where('API_KEY').equals(razorpay_key);
     const data = accountData[0];
     const jsonObject = JSON.stringify(data);

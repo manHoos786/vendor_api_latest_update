@@ -15,20 +15,25 @@ const schema = new mongoose.Schema({
     t_id:String,
 	account_id:String,
 	status:Boolean,
-	API_KEY:String
+	API_KEY:String,
+	API_VALUE:String
 });
 
 app.post("/api/payment/order/:id", async(req, res) =>{
 	const razorpay_key = req.params.id;
 	const accountData = await findData('key_values').find().where('API_KEY').equals(razorpay_key);
-    const data = accountData[0];
-    const jsonObject = JSON.stringify(data);
-    var objectValue = JSON.parse(jsonObject);
+    const jsonObject = JSON.stringify(accountData[0]);
+    const objectValue = JSON.parse(jsonObject);
+	// console.log(accountData[0]['API_VALUE'])
 	const instance = new Razorpay({
 		key_id : razorpay_key,
 		key_secret : objectValue['API_VALUE']
 	});
 	parameter = req.body;
+
+	console.log(razorpay_key)
+	console.log(objectValue['API_VALUE'])
+	console.log(parameter)
 
 	instance.orders
 		.create(parameter)

@@ -49,7 +49,8 @@ app.post('/final_recipt', async(req, res) =>{
 	try{
 
 		const recipt = new findData("final_recipt")({
-			amount : req.body.amount,
+			quantity : req.body.quantity,
+			product_id:req.body.product_id,
 			t_id:req.body.t_id,
 			account_id:req.body.account_id,
 		})

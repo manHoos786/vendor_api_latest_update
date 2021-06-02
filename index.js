@@ -83,7 +83,7 @@ app.post('/verification', async(req, res) =>{
 		const digest = shasum.digest('hex');
 
 		if (digest === req.headers['x-razorpay-signature']) {
-			require('fs').writeFileSync('payment1.json', JSON.stringify(req.body, null, 4))
+			// require('fs').writeFileSync('payment1.json', JSON.stringify(req.body, null, 4))
 			const accountNumber = req.body.account_id;
 			const user = new findData(accountNumber)({
 				product_id:JSON.stringify(req.body.payload.payment.entity.notes.product_id, null, 4),

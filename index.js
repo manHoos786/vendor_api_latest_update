@@ -18,8 +18,8 @@ const schema = new mongoose.Schema({
 	status:Boolean,
 	api_key:String,
 	api_value:String,
-	product_id : String,
-	quantity:String
+	product_id : Number,
+	quantity:Number
 });
 
 app.post("/api/payment/order/:id", async(req, res) =>{

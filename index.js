@@ -18,6 +18,8 @@ const schema = new mongoose.Schema({
 	status:Boolean,
 	api_key:String,
 	api_value:String,
+	product_id : String,
+	quantity:String
 });
 
 app.post("/api/payment/order/:id", async(req, res) =>{
@@ -81,11 +83,11 @@ app.post('/verification', async(req, res) =>{
 		const digest = shasum.digest('hex');
 
 		if (digest === req.headers['x-razorpay-signature']) {
-			console.log(req.body);
 			require('fs').writeFileSync('payment1.json', JSON.stringify(req.body, null, 4))
 			const accountNumber = req.body.account_id;
 			const user = new findData(accountNumber)({
-				amount:JSON.stringify(req.body.payload.payment.entity.amount/100, null, 4),
+				product_id:JSON.stringify(req.body.payload.payment.entity.notes.product_id, null, 4),
+				quantity:JSON.stringify(req.body.payload.payment.entity.notes.quantity, null, 4),
 				t_id:JSON.stringify(req.body.payload.payment.entity.id, null, 4),
 				account_id:JSON.stringify(req.body.account_id, null, 4),
 				status:false

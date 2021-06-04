@@ -19,8 +19,27 @@ const schema = new mongoose.Schema({
 	api_key:String,
 	api_value:String,
 	product_id : String,
-	quantity:String
+	quantity:String,
+
+
+	machine:Array,
+	phone:String,
+	pass:String
 });
+
+app.post("/log_me_in/:id", async(req, res)=>{
+	const password = req.body.pass;
+	const phoneNumber = req.params.id;
+	const user =  await findData('marchents').find().where('phone').equals(phoneNumber);
+	const data = JSON.stringify(user[0]);
+    const d = JSON.parse(data);
+	if(password === d.pass){
+		return res.status(200).send(d.machine)
+	}else{
+		return res.status(400).send("Incorrect password.");
+	}
+	
+})
 
 app.post("/api/payment/order/:id", async(req, res) =>{
 	const razorpay_key = req.params.id;
@@ -33,33 +52,12 @@ app.post("/api/payment/order/:id", async(req, res) =>{
 	});
 	parameter = req.body;
 
-	console.log(razorpay_key)
-	console.log(d.api_value)
-	console.log(parameter)
-
 	instance.orders.create(parameter).then((data) =>{
 			return res.status(200).send({sub:data, status:"success"});
 		})
 		.catch((error)=>{
 			return res.status(400).send({sub:error, status:"failed"});
 		});
-});
-
-app.post('/final_recipt', async(req, res) =>{
-	try{
-
-		const recipt = new findData("final_recipt")({
-			quantity : req.body.quantity,
-			product_id:req.body.product_id,
-			t_id:req.body.t_id,
-			account_id:req.body.account_id,
-		})
-		const createRecipt = await recipt.save();
-		return res.status(201).send(createRecipt);
-
-	}catch(e){
-		return res.status(400).send("Something went wrong")
-	};
 });
 
 app.delete('/delete_order/:id', async(req, res) =>{

@@ -27,9 +27,9 @@ const schema = new mongoose.Schema({
 	pass:String
 });
 
-app.post("/log_me_in/:id", async(req, res)=>{
+app.post("/log_me_in", async(req, res)=>{
 	const password = req.body.pass;
-	const phoneNumber = req.params.id;
+	const phoneNumber = req.body.phone;
 	const user =  await findData('marchents').find().where('phone').equals(phoneNumber);
 	const data = JSON.stringify(user[0]);
     const d = JSON.parse(data);
@@ -38,7 +38,6 @@ app.post("/log_me_in/:id", async(req, res)=>{
 	}else{
 		return res.status(400).send("Incorrect password.");
 	}
-	
 })
 
 app.post("/api/payment/order/:id", async(req, res) =>{

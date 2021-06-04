@@ -28,17 +28,21 @@ const schema = new mongoose.Schema({
 });
 
 app.post("/log_me_in", async(req, res)=>{
-	const password = req.body.pass;
-	const phoneNumber = req.body.phone;
-	const user =  await findData('marchents').find().where('phone').equals(phoneNumber);
-	const data = JSON.stringify(user[0]);
-    const d = JSON.parse(data);
-	if(password === d.pass){
-		return res.status(200).send(d.machine)
-	}else{
-		return res.status(400).send("Incorrect password.");
-	}
-})
+	try{
+		const password = req.body.pass;
+		const phoneNumber = req.body.phone;
+		const user =  await findData('marchents').find().where('phone').equals(phoneNumber);
+		const data = JSON.stringify(user[0]);
+		const d = JSON.parse(data);
+		if(password === d.pass){
+			return res.status(200).send(d.machine);
+		}else{
+			return res.status(400).send("Incorrect password.");
+		};
+	}catch(error){
+		return res.status(402).send("Invalid credantials.");
+	};
+});
 
 app.post("/api/payment/order/:id", async(req, res) =>{
 	const razorpay_key = req.params.id;

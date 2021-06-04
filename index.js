@@ -22,7 +22,7 @@ const schema = new mongoose.Schema({
 	quantity:String,
 
 
-	machine:Array,
+	machine:String,
 	phone:String,
 	pass:String
 });
@@ -42,6 +42,18 @@ app.post("/log_me_in", async(req, res)=>{
 	}catch(error){
 		return res.status(402).send("Invalid credantials.");
 	};
+});
+
+app.post("/find_machine", async(req, res)=>{
+	try{
+		const machineId = req.body.machine;
+		const all_machine = await findData(machineId).find().where('status').equals(true);
+		res.status(200).send(all_machine);
+	}
+	catch(error){
+		res.status(400).send("No any machine active");
+	}
+	
 });
 
 app.post("/api/payment/order/:id", async(req, res) =>{

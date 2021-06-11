@@ -97,17 +97,13 @@ app.post('/verification', async(req, res) =>{
 		const shasum = crypto.createHmac('sha256', SECRET);
 		shasum.update(JSON.stringify(req.body));
 		const digest = shasum.digest('hex');
-		const pid =Number(JSON.stringify(req.body.payload.payment.entity.notes.product_id, null, 4));
-		const quant =Number(JSON.stringify(req.body.payload.payment.entity.notes.quantity, null, 4));
-		console.log(pid);
-		console.log(quant);
 
 		if (digest === req.headers['x-razorpay-signature']) {
 			require('fs').writeFileSync('payment1.json', JSON.stringify(req.body, null, 4))
 			const accountNumber = req.body.account_id;
 			const user = new findData(accountNumber)({
-				product_id:pid,
-				quantity:quant,
+				product_id:req.body.payload.payment.entity.notes.product_id,
+				quantity:req.body.payload.payment.entity.notes.quantity,
 				t_id:JSON.stringify(req.body.payload.payment.entity.id, null, 4),
 				account_id:JSON.stringify(req.body.account_id, null, 4),
 				status:false

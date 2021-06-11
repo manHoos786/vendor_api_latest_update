@@ -1,6 +1,6 @@
 {
     "entity": "event",
-    "account_id": "acc_HHRwoXtSxtqOo8",
+    "account_id": "acc_HEW9Z0wzfHsyWM",
     "event": "payment.captured",
     "contains": [
         "payment"
@@ -8,54 +8,42 @@
     "payload": {
         "payment": {
             "entity": {
-                "id": "pay_HI34ybtXYsCukm",
+                "id": "pay_HLny8KyTKMibDi",
                 "entity": "payment",
-                "amount": 6200,
+                "amount": 17600,
                 "currency": "INR",
                 "status": "captured",
-                "order_id": "order_HI34Z8ITiMnq2H",
+                "order_id": "order_HLnxpzYk5cVi7g",
                 "invoice_id": null,
                 "international": false,
-                "method": "card",
+                "method": "netbanking",
                 "amount_refunded": 0,
                 "refund_status": null,
                 "captured": true,
                 "description": "Please pay here",
-                "card_id": "card_HI34yeDsNizdkp",
-                "card": {
-                    "id": "card_HI34yeDsNizdkp",
-                    "entity": "card",
-                    "name": "ffff",
-                    "last4": "1111",
-                    "network": "Visa",
-                    "type": "debit",
-                    "issuer": null,
-                    "international": false,
-                    "emi": false,
-                    "sub_type": "consumer"
-                },
-                "bank": null,
+                "card_id": null,
+                "bank": "SBIN",
                 "wallet": null,
                 "vpa": null,
                 "email": "sharmaaakash170@gmail.com",
                 "contact": "+917860290907",
                 "notes": {
-                    "quantity": "2",
-                    "product_id": "301"
+                    "quantity": "4",
+                    "product_id": "1623397562186"
                 },
-                "fee": 124,
-                "tax": 0,
+                "fee": 416,
+                "tax": 64,
                 "error_code": null,
                 "error_description": null,
                 "error_source": null,
                 "error_step": null,
                 "error_reason": null,
                 "acquirer_data": {
-                    "auth_code": "860479"
+                    "bank_transaction_id": "7507409"
                 },
-                "created_at": 1622605841
+                "created_at": 1623425988
             }
         }
     },
-    "created_at": 1622605844
+    "created_at": 1623425991
 }

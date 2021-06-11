@@ -18,9 +18,8 @@ const schema = new mongoose.Schema({
 	status:Boolean,
 	api_key:String,
 	api_value:String,
-	product_id : String,
-	quantity:String,
-
+	product_id : Number,
+	quantity:Number,
 
 	machine:String,
 	phone:String,
@@ -46,8 +45,11 @@ app.post("/log_me_in", async(req, res)=>{
 
 app.post("/find_machine", async(req, res)=>{
 	try{
+		// this method show all the machines owned by a single vendor
 		const machineId = req.body.machine;
 		const all_machine = await findData(machineId).find().where('status').equals(true);
+		console.log(machineId);
+		console.log(all_machine)
 		res.status(200).send(all_machine);
 	}
 	catch(error){
@@ -95,13 +97,17 @@ app.post('/verification', async(req, res) =>{
 		const shasum = crypto.createHmac('sha256', SECRET);
 		shasum.update(JSON.stringify(req.body));
 		const digest = shasum.digest('hex');
+		const pid =Number(JSON.stringify(req.body.payload.payment.entity.notes.product_id, null, 4));
+		const quant =Number(JSON.stringify(req.body.payload.payment.entity.notes.quantity, null, 4));
+		console.log(pid);
+		console.log(quant);
 
 		if (digest === req.headers['x-razorpay-signature']) {
-			// require('fs').writeFileSync('payment1.json', JSON.stringify(req.body, null, 4))
+			require('fs').writeFileSync('payment1.json', JSON.stringify(req.body, null, 4))
 			const accountNumber = req.body.account_id;
 			const user = new findData(accountNumber)({
-				product_id:JSON.stringify(req.body.payload.payment.entity.notes.product_id, null, 4),
-				quantity:JSON.stringify(req.body.payload.payment.entity.notes.quantity, null, 4),
+				product_id:pid,
+				quantity:quant,
 				t_id:JSON.stringify(req.body.payload.payment.entity.id, null, 4),
 				account_id:JSON.stringify(req.body.account_id, null, 4),
 				status:false

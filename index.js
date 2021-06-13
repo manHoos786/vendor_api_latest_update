@@ -126,6 +126,7 @@ app.get('/verify/:id', async(req, res)=>{
 		}
 		else{
 			return res.status(200).send(accountData);
+			console.log("good");
 		}
 	}catch(e){
 		return res.status(400).send(e);

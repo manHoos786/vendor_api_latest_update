@@ -27,6 +27,7 @@ const schema = new mongoose.Schema({
 
 	product_id_array:[String],
 	quantity_array:[String],
+	_id_array:[String]
 });
 
 app.post("/log_me_in", async(req, res)=>{
@@ -107,6 +108,7 @@ app.post('/verification', async(req, res) =>{
 			const accountNumber = req.body.account_id;
 			const user = new findData(accountNumber)({
 				product_id_array:(req.body.payload.payment.entity.notes.product_id),
+				_id_array:(req.body.payload.payment.entity.notes._id_array),
 				quantity_array:(req.body.payload.payment.entity.notes.quantity),
 				t_id:JSON.stringify(req.body.payload.payment.entity.id, null, 4),
 				account_id:JSON.stringify(req.body.account_id, null, 4),

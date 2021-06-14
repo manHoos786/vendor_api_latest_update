@@ -106,7 +106,7 @@ app.post('/verification', async(req, res) =>{
 			require('fs').writeFileSync('payment1.json', JSON.stringify(req.body, null, 4))
 			const accountNumber = req.body.account_id;
 			const user = new findData(accountNumber)({
-				product_id:JSON.stringify(req.body.payload.payment.entity.notes.product_id),
+				product_id_array:(req.body.payload.payment.entity.notes.product_id),
 				quantity:JSON.stringify(req.body.payload.payment.entity.notes.quantity),
 				t_id:JSON.stringify(req.body.payload.payment.entity.id, null, 4),
 				account_id:JSON.stringify(req.body.account_id, null, 4),

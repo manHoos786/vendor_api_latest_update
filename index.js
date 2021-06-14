@@ -18,12 +18,15 @@ const schema = new mongoose.Schema({
 	status:Boolean,
 	api_key:String,
 	api_value:String,
-	product_id : Number,
-	quantity:Number,
+	product_id : String,
+	quantity:String,
 
 	machine:String,
 	phone:String,
-	pass:String
+	pass:String,
+
+	product_id_array:[String],
+	quantity_array:[String],
 });
 
 app.post("/log_me_in", async(req, res)=>{
@@ -98,12 +101,13 @@ app.post('/verification', async(req, res) =>{
 		shasum.update(JSON.stringify(req.body));
 		const digest = shasum.digest('hex');
 
+
 		if (digest === req.headers['x-razorpay-signature']) {
 			require('fs').writeFileSync('payment1.json', JSON.stringify(req.body, null, 4))
 			const accountNumber = req.body.account_id;
 			const user = new findData(accountNumber)({
-				product_id:req.body.payload.payment.entity.notes.product_id,
-				quantity:req.body.payload.payment.entity.notes.quantity,
+				product_id:JSON.stringify(req.body.payload.payment.entity.notes.product_id),
+				quantity:JSON.stringify(req.body.payload.payment.entity.notes.quantity),
 				t_id:JSON.stringify(req.body.payload.payment.entity.id, null, 4),
 				account_id:JSON.stringify(req.body.account_id, null, 4),
 				status:false
@@ -126,7 +130,6 @@ app.get('/verify/:id', async(req, res)=>{
 		}
 		else{
 			return res.status(200).send(accountData);
-			console.log("good");
 		}
 	}catch(e){
 		return res.status(400).send(e);

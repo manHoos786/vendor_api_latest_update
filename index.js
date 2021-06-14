@@ -107,7 +107,7 @@ app.post('/verification', async(req, res) =>{
 			const accountNumber = req.body.account_id;
 			const user = new findData(accountNumber)({
 				product_id_array:(req.body.payload.payment.entity.notes.product_id),
-				quantity:JSON.stringify(req.body.payload.payment.entity.notes.quantity),
+				quantity_array:(req.body.payload.payment.entity.notes.quantity),
 				t_id:JSON.stringify(req.body.payload.payment.entity.id, null, 4),
 				account_id:JSON.stringify(req.body.account_id, null, 4),
 				status:false

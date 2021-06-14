@@ -110,6 +110,7 @@ app.post('/verification', async(req, res) =>{
 				product_id_array:(req.body.payload.payment.entity.notes.product_id),
 				_id_array:(req.body.payload.payment.entity.notes._id_array),
 				quantity_array:(req.body.payload.payment.entity.notes.quantity),
+				machine:JSON.stringify(req.body.payload.payment.entity.notes.machine),
 				t_id:JSON.stringify(req.body.payload.payment.entity.id, null, 4),
 				account_id:JSON.stringify(req.body.account_id, null, 4),
 				status:false

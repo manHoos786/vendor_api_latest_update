@@ -129,7 +129,7 @@ app.get('/verify/:id', async(req, res)=>{
 		const accountData = await findData(_id).find().where('status').equals(false);
 		const isEmpty = Object.keys(accountData).length === 0 ;
 		if(isEmpty){
-			return res.status(404).send("No data avilable.");
+			return res.status(401).send("No data avilable.");
 		}
 		else{
 			return res.status(200).send(accountData);
